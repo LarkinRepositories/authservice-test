@@ -8,12 +8,12 @@ import com.authservice.authservice.repository.UserRepository;
 import com.authservice.authservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -52,16 +52,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUserName(String name) {
-        return null;
+        User user = userRepository.findByUsername(name);
+        if (user == null) {
+            log.warn("In findByUserName - no user found by name: {}", name);
+            return null;
+        }
+        log.info("IN findByUserName - user: {} found by username: {}", user, name);
+        return user;
     }
 
     @Override
     public User findById(Long id) {
-        return null;
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            log.warn("In findById - no user found by id: {}", id);
+            return null;
+        }
+        log.info("In findById user: {} found by id: {}", user, id);
+        return user;
     }
 
     @Override
     public void delete(Long id) {
-
+        userRepository.deleteById(id);
+        log.info("In delete - user with id: {} sucessfully deleted", id);
     }
 }
