@@ -1,4 +1,4 @@
-package com.authservice.authservice.security;
+package com.authservice.authservice.security.jwtuser;
 
 import com.authservice.authservice.model.User;
 import com.authservice.authservice.service.UserService;
@@ -23,6 +23,8 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUserName(username);
         if (user == null) throw new UsernameNotFoundException("User with username: "+username + "not found");
-        return null;
+        JwtUser jwtUser = JwtUserFactory.create(user);
+        log.info("In loadUserByUsername - user with username: {} successfully loaded", username);
+        return jwtUser;
     }
 }
